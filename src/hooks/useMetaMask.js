@@ -80,7 +80,23 @@ export const MetaMaskProvider = ({ children }) => {
     }
   }
 
-  
+
+  // Update the rest of the app if any dependencies of of this hook change
+  // This will change properties of our hook accordingly
+  // This is tell the rest of the app if isActive or isLoading is updated
+    // and give access to 'connect' and 'disconnect' functions + 'account'
+  // These values will only be updated when the dependencies that we pass useMemo change
+    // These dependencies are passed in as the second arg (the array)
+  const values = useMemo(
+    () => ({
+        isActive,
+        account,
+        isLoading,
+        connect,
+        disconnect
+    }),
+    [isActive, isLoading]
+  )
 
 
 
