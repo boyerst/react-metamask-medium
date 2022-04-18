@@ -22,6 +22,7 @@ export const MetaMaskProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)  
 
 
+  // HOOK TO INITIALIZE connect() when app is first ran and after useWeb3React hook is initialized
   // Accepts two args
     // 1. A function to connect
     // 2. An array that will store values that the 'connect' effect depends on
@@ -33,13 +34,40 @@ export const MetaMaskProvider = ({ children }) => {
   }, [])
 
 
+  // CHECK IF METAMASK IS CURRENTLY CONNECTED TO APP
+  // Accepts two args
+    // 1. An inline callback
+    // 2. A dependent property
+  // The useCallback will only re-render when the dependency changes - in this case anytime active beomes true or false
+  const handleIsActive = useCallback(() => {
+    console.log('Dapp is connected with MetaMask', active)
+    // Pass in the 'active' prop from useWeb3React() hook above
+    setIsActive(active)
+  }, [active])
+
+
+  // TELL APP TO USE EFFECT handleIsActive()
+    // "The function passed to useEffect will run after the render is committed to the screen"
+    // ↑ However, we have changed it so that it will only fire when a certain value has changed
+    // In this case it will only fire when 'active' (inside of handleIsActive callback) has changed to true or false
+    // This is the purpose of passing the array in as the second arg
+    // ORDER OF OPERATIONS ❓
+      // useEffect() called after render
+      // useEffect() calls handleIsActive()
+      // If handleIsActive() dependency ('active' state property) has changed to true or false (user connects or disconnects), then handleIsActive will run and re render
+      // Else if the dependency (active) stays the same, no re-rendering is necessary
+  useEffect(() => {
+    handleIsActive()
+  }, [handleIsActive])
+
+
   // We use callbacks so that the app does not rerender more than needed - only when called
   const connect = async () => {
     console.log('Connecting to MetaMask...')
     try {
       await activate(injected)
     } catch(error) {
-      console.log('Error connecting to MetaMas: ', error)
+      console.log('Error connecting to MetaMask: ', error)
     } 
   }
 
@@ -52,7 +80,7 @@ export const MetaMaskProvider = ({ children }) => {
     }
   }
 
-
+  
 
 
 
