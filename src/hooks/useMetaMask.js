@@ -22,8 +22,63 @@ export const MetaMaskProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)  
 
 
+  // Accepts two args
+    // 1. A function to connect
+    // 2. An array that will store values that the 'connect' effect depends on
+      // This useEffect will only execute when that anything in that dependent arg changes
+  useEffect(() => {
+    connect().then(val => {
+      setIsLoading(false)
+    })
+  }, [])
+
+
+  // We use callbacks so that the app does not rerender more than needed - only when called
+  const connect = async () => {
+    console.log('Connecting to MetaMask...')
+    try {
+      await activate(injected)
+    } catch(error) {
+      console.log('Error connecting to MetaMas: ', error)
+    } 
+  }
+
+  const disconnect = async () => {
+    console.log('Disconnecting wallet from Dapp...')
+    try {
+      await deactivate()
+    } catch(error) {
+      console.log('Error disconnecting from Dapp: ', error)
+    }
+  }
+
+
+
+
+
+
   return <MetaMaskContext.Provider value={values}> {children} </MetaMaskContext.Provider>
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
