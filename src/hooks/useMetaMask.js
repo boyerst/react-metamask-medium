@@ -17,6 +17,8 @@ export const MetaMaskProvider = ({ children }) => {
   const { activate, account, library, connector, active, deactivate } = useWeb3React()
 
   // Use to tell if MetaMask is currently connected to the dapp via proper chain
+    // Active False = Disconnected
+    // Active True = Connected
   const [isActive, setIsActive] = useState(false)
   // Use to tell when MetaMask hook is loading to read its connection with MetaMask
   const [isLoading, setIsLoading] = useState(true)  
@@ -25,8 +27,7 @@ export const MetaMaskProvider = ({ children }) => {
   // HOOK TO INITIALIZE connect() when app is first ran and after useWeb3React hook is initialized
   // Accepts two args
     // 1. A function to connect
-    // 2. An array that will store values that the 'connect' effect depends on
-      // This useEffect will only execute when that anything in that dependent arg changes
+    // 2. A dependency - no dependency in this case
   useEffect(() => {
     connect().then(val => {
       setIsLoading(false)
@@ -39,6 +40,7 @@ export const MetaMaskProvider = ({ children }) => {
     // 1. An inline callback
     // 2. A dependent property
   // The useCallback will only re-render when the dependency changes - in this case anytime active beomes true or false
+    // When active becomes true, setIsActive will be true
   const handleIsActive = useCallback(() => {
     console.log('Dapp is connected with MetaMask', active)
     // Pass in the 'active' prop from useWeb3React() hook above
@@ -47,15 +49,18 @@ export const MetaMaskProvider = ({ children }) => {
 
 
   // TELL APP TO USE EFFECT handleIsActive()
-    // "The function passed to useEffect will run after the render is committed to the screen"
-    // ↑ However, we have changed it so that it will only fire when a certain value has changed
-    // In this case it will only fire when 'active' (inside of handleIsActive callback) has changed to true or false
-    // This is the purpose of passing the array in as the second arg
+    // The function passed to useEffect will run...
+        // 1. After every completed render
+        // 2. Anytime that the dependency (handleIsActive) changes
+          // This will update our app anytime it becomes Active True (connected) or Active False (disconnected)
+
     // ORDER OF OPERATIONS ❓
-      // useEffect() called after render
+      // useEffect() called after initial render is completed
       // useEffect() calls handleIsActive()
-      // If handleIsActive() dependency ('active' state property) has changed to true or false (user connects or disconnects), then handleIsActive will run and re render
-      // Else if the dependency (active) stays the same, no re-rendering is necessary
+      // handleIsActive updates our apps connection status (Active True = connected) by updating the 'active' property from our useWeb3React hook
+      // Beyond the initial render...
+        // If handleIsActive() dependency ('active' state property) has changed to true or false (user connects or disconnects), then handleIsActive will run and re render
+        // Else if the dependency (active) stays the same, no re-rendering is necessary
   useEffect(() => {
     handleIsActive()
   }, [handleIsActive])

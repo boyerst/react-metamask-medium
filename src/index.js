@@ -17,6 +17,9 @@ function getLibrary(provider, connector) {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+{/* Web3ReactProvider is what our web3ReactProvider depends on & also paves the way for using Web3 in our app 
+    We wrap our entire app with it so we can have the state of our custom hook existing at all times
+*/}
     <Web3ReactProvider getLibrary={getLibrary} >
       <MetaMaskProvider>
         <App />
