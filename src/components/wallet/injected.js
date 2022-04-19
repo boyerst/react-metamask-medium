@@ -1,6 +1,6 @@
 // Injected component used to connect MetaMask to specific blockchains
 
-import { InjectedConnector } from ‘@web3-react/injected-connector’
+import { InjectedConnector } from '@web3-react/injected-connector'
 
 
 

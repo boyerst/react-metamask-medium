@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 import Web3 from 'web3'
 import { Web3ReactProvider } from '@web3-react/core'
-import { MetaMaskProvider } from './hooks/metamask'
+import { MetaMaskProvider } from './hooks/useMetaMask.js'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 

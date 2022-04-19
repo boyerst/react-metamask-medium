@@ -3,8 +3,8 @@
   // To keep track of state and fetch data (account info, balance, etc.)
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { injected } from '../components/wallet/connectors'
-import { useWeb3React } fr, '@web3-react/core'
+import { injected } from '../components/wallet/injected.js'
+import { useWeb3React } from '@web3-react/core'
 
 // Use createContext to keep track of the State of this hook through the app's lifecycle
 export const MetaMaskContext = React.createContext(null)
